@@ -150,6 +150,7 @@ class Graph:
 ​
         This should be done using recursion.
         """
+        pass  # TODO
         ## mark our node as visited
         visited.add(starting_vertex)
         ## check if it's our target node, if so return
@@ -168,6 +169,17 @@ class Graph:
                 if result is not None:
             ###### return from here
                     return result
+
+
+                    
+        # if path is None:
+        #     path = [starting_vertex]
+        # if starting_vertex == destination_vertex:
+        #     yield path
+        # for next in self.get_neighbors(starting_vertex) - set(path):
+        #     yield from self.dfs_recursive(next, destination_vertex, path + [next])
+
+
 
 
 if __name__ == '__main__':
