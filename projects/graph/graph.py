@@ -95,24 +95,32 @@ class Graph:
         breadth-first order.
         """
         # pass  # TODO
+        explored = set() # keep track of explored nodes
         queue = Queue()
-
-        queue.enqueue([starting_vertex])
-        
-        while queue.size() > 0:
-            path = queue.dequeue()
-            last_vert = path[-1]
-
+        queue.enqueue([starting_vertex]) # keep track of all the paths to be checked
+         # keeps looping until all possible paths have been checked
+        while queue.size() > 0: 
+            path = queue.dequeue() # pop the first path from the queue
+            last_vert = path[-1] # get the last node from the path
             if last_vert == destination_vertex:
                 return path
-            
-            for adjacent in self.get_neighbors(last_vert):
-                new_path = list(path)
-                new_path.append(adjacent)
-                queue.enqueue(new_path)
+            if last_vert not in explored:
+                neighbors = self.get_neighbors(last_vert)
+                # go through all neighbor nodes, construct a new path and
+                # push it into the queue
+                for neighbor in neighbors:
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    queue.enqueue(new_path)
+                    # return path if neighbor is goal
+                    if neighbor == destination_vertex:
+                        return new_path
+                # mark node as explored
+                explored.add(last_vert)
+           
+        return "So sorry, but a connecting path doesn't exist :("
 
-
-    def dfs(self, starting_vertex, destination_vertex, path = None):
+    def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -121,16 +129,16 @@ class Graph:
         # pass  # TODO
         stack = Stack()
         stack.push(starting_vertex)
-        visited = set()
+        explored = set()
         while stack.size() > 0:
             current_node = stack.pop()
-            visited.add(current_node)
+            explored.add(current_node)
             for edge in self.get_neighbors(current_node):
-                if edge not in visited:
+                if edge not in explored:
                     stack.push(edge)
                 if edge is destination_vertex:
-                    visited.add(edge)
-                    return list(visited)
+                    explored.add(edge)
+                    return list(explored)
             
 
 
