@@ -128,8 +128,8 @@ class Graph:
         """
         # pass  # TODO
         stack = Stack()
-        stack.push(starting_vertex)
-        explored = set()
+        stack.push(starting_vertex) # keep track of all the paths to be checked
+        explored = set() # keep track of explored nodes
         while stack.size() > 0:
             current_node = stack.pop()
             explored.add(current_node)
