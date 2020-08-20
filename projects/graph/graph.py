@@ -151,7 +151,7 @@ class Graph:
             visited = set()
         if path is None:
             path = [] #because needs to be ordered
-        visited.add(starting_vertex)
+        visited.add(starting_vertex) 
         path = path + [starting_vertex]
         
         ## check if it's our target node, if so return
