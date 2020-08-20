@@ -15,7 +15,7 @@ class Graph:
         """
         # pass  # TODO
         if vertex_id not in self.vertices:
-            self.vertices[vertex_id] = set()
+            self.vertices[vertex_id] = set() # because sets are faster and they are hashtables underneath the hood 
 
     def add_edge(self, v1, v2):
         """
@@ -25,7 +25,7 @@ class Graph:
         if v1 in self.vertices:
             self.vertices[v1].add(v2) 
         else:
-            self.vertices[v1] = [v2]
+            raise IndexError("That vertex does not exist!")
 
     def get_neighbors(self, vertex_id):
         """
@@ -48,10 +48,8 @@ class Graph:
             if current_node not in visited:
                 visited.add(current_node)
                 print(current_node)
-                neighbors = self.get_neighbors(current_node)
-                for neighbor in neighbors:
-                    if neighbor not in visited:
-                        queue.enqueue(neighbor)
+                for neighbor in self.get_neighbors(current_node):
+                    queue.enqueue(neighbor)
 
     def dft(self, starting_vertex):
         """
@@ -67,10 +65,8 @@ class Graph:
             if current_node not in visited:
                 visited.add(current_node)
                 print(current_node)
-                neighbors = self.get_neighbors(current_node)
-                for neighbor in neighbors:
-                    if neighbor not in visited:
-                        stack.push(neighbor)
+                for neighbor in self.get_neighbors(current_node):
+                    stack.push(neighbor)
 
     def dft_recursive(self, starting_vertex, visited = None):
         """
@@ -84,7 +80,7 @@ class Graph:
             visited = set()
         visited.add(starting_vertex)
         print(starting_vertex)
-        for edge in self.vertices[starting_vertex]:
+        for edge in self.get_neighbors(starting_vertex):
             if edge not in visited:
                 self.dft_recursive(edge, visited)
 
@@ -102,21 +98,18 @@ class Graph:
         while queue.size() > 0: 
             path = queue.dequeue() # pop the first path from the queue
             last_vert = path[-1] # get the last node from the path
-            if last_vert == destination_vertex:
-                return path
+            
             if last_vert not in explored:
-                neighbors = self.get_neighbors(last_vert)
+                if last_vert == destination_vertex:
+                    return path
+                explored.add(last_vert)
                 # go through all neighbor nodes, construct a new path and
                 # push it into the queue
-                for neighbor in neighbors:
-                    new_path = list(path)
+                for neighbor in self.get_neighbors(last_vert):
+                    new_path = path.copy()
                     new_path.append(neighbor)
                     queue.enqueue(new_path)
-                    # return path if neighbor is goal
-                    if neighbor == destination_vertex:
-                        return new_path
-                # mark node as explored
-                explored.add(last_vert)
+                    
            
         return "So sorry, but a connecting path doesn't exist :("
 
@@ -128,21 +121,24 @@ class Graph:
         """
         # pass  # TODO
         stack = Stack()
-        stack.push(starting_vertex) # keep track of all the paths to be checked
+        stack.push([starting_vertex]) # keep track of all the paths to be checked
         explored = set() # keep track of explored nodes
         while stack.size() > 0:
-            current_node = stack.pop()
-            explored.add(current_node)
-            for edge in self.get_neighbors(current_node):
-                if edge not in explored:
-                    stack.push(edge)
-                if edge is destination_vertex:
-                    explored.add(edge)
-                    return list(explored)
-            
+            path = stack.pop()
+            last_vert = path[-1]
+            if last_vert not in explored:
+                if last_vert == destination_vertex:
+                    return path
+                explored.add(last_vert)
+                for edge in self.get_neighbors(last_vert):
+                    new_path = path.copy()
+                    new_path.append(edge)
+                    stack.push(new_path)
+              
+        return "So sorry, but a connecting path doesn't exist :("    
 
 
-    def dfs_recursive(self, starting_vertex, destination_vertex, path=[], visited=set()):
+    def dfs_recursive(self, starting_vertex, destination_vertex, path=None, visited=None):
         """
         Return a list containing a path from
         starting_vertex to destination_vertex in
@@ -151,35 +147,27 @@ class Graph:
         This should be done using recursion.
         """
         pass  # TODO
-        ## mark our node as visited
+        if visited is None:
+            visited = set()
+        if path is None:
+            path = [] #because needs to be ordered
         visited.add(starting_vertex)
+        path = path + [starting_vertex]
+        
         ## check if it's our target node, if so return
         if starting_vertex == destination_vertex:
             return path
-        if len(path) == 0:
-            path.append(starting_vertex)
         ## iterate over neighbors
-        neighbors = self.get_neighbors(starting_vertex)
         ### check if visited
-        for neighbor in neighbors:
+        for neighbor in self.get_neighbors(starting_vertex):
             if neighbor not in visited: 
         #### if not, recurse with a path
-                result = self.dfs_recursive(neighbor, destination_vertex, path + [neighbor], visited)
+                result = self.dfs_recursive(neighbor, destination_vertex, path, visited)
         ##### if this recursion returns a path,
                 if result is not None:
             ###### return from here
                     return result
-
-
-                    
-        # if path is None:
-        #     path = [starting_vertex]
-        # if starting_vertex == destination_vertex:
-        #     yield path
-        # for next in self.get_neighbors(starting_vertex) - set(path):
-        #     yield from self.dfs_recursive(next, destination_vertex, path + [next])
-
-
+        return None
 
 
 if __name__ == '__main__':
