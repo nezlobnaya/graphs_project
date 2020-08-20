@@ -13,7 +13,7 @@ class Graph:
         """
         Add a vertex to the graph.
         """
-        # pass  # TODO
+    
         if vertex_id not in self.vertices:
             self.vertices[vertex_id] = set() # because sets are faster and they are hashtables underneath the hood 
 
@@ -21,7 +21,7 @@ class Graph:
         """
         Add a directed edge to the graph.
         """
-        # pass  # TODO
+     
         if v1 in self.vertices:
             self.vertices[v1].add(v2) 
         else:
@@ -31,7 +31,7 @@ class Graph:
         """
         Get all neighbors (edges) of a vertex.
         """
-        # pass  # TODO
+        
         return self.vertices[vertex_id]
 
     def bft(self, starting_vertex):
@@ -39,7 +39,7 @@ class Graph:
         Print each vertex in breadth-first order
         beginning from starting_vertex.
         """
-        # pass  # TODO
+    
         queue = Queue()
         queue.enqueue(starting_vertex)
         visited = set()
@@ -56,7 +56,7 @@ class Graph:
         Print each vertex in depth-first order
         beginning from starting_vertex.
         """
-        # pass  # TODO
+       
         stack = Stack()
         stack.push(starting_vertex)
         visited = set()
@@ -75,14 +75,13 @@ class Graph:
 
         This should be done using recursion.
         """
-        # pass  # TODO
         if visited is None:
             visited = set()
         visited.add(starting_vertex)
         print(starting_vertex)
-        for edge in self.get_neighbors(starting_vertex):
-            if edge not in visited:
-                self.dft_recursive(edge, visited)
+        for neighbor in self.get_neighbors(starting_vertex):
+            if neighbor not in visited:
+                self.dft_recursive(neighbor, visited)
 
     def bfs(self, starting_vertex, destination_vertex):
         """
@@ -90,22 +89,22 @@ class Graph:
         starting_vertex to destination_vertex in
         breadth-first order.
         """
-        # pass  # TODO
+     
         explored = set() # keep track of explored nodes
         queue = Queue()
         queue.enqueue([starting_vertex]) # keep track of all the paths to be checked
          # keeps looping until all possible paths have been checked
         while queue.size() > 0: 
             path = queue.dequeue() # pop the first path from the queue
-            last_vert = path[-1] # get the last node from the path
+            current = path[-1] # get the last node from the path
             
-            if last_vert not in explored:
-                if last_vert == destination_vertex:
+            if current not in explored:
+                if current == destination_vertex:
                     return path
-                explored.add(last_vert)
+                explored.add(current)
                 # go through all neighbor nodes, construct a new path and
                 # push it into the queue
-                for neighbor in self.get_neighbors(last_vert):
+                for neighbor in self.get_neighbors(current):
                     new_path = path.copy()
                     new_path.append(neighbor)
                     queue.enqueue(new_path)
@@ -119,20 +118,20 @@ class Graph:
         starting_vertex to destination_vertex in
         depth-first order.
         """
-        # pass  # TODO
+    
         stack = Stack()
         stack.push([starting_vertex]) # keep track of all the paths to be checked
         explored = set() # keep track of explored nodes
         while stack.size() > 0:
             path = stack.pop()
-            last_vert = path[-1]
-            if last_vert not in explored:
-                if last_vert == destination_vertex:
+            current = path[-1]
+            if current not in explored:
+                if current == destination_vertex:
                     return path
-                explored.add(last_vert)
-                for edge in self.get_neighbors(last_vert):
+                explored.add(current)
+                for neighbor in self.get_neighbors(current):
                     new_path = path.copy()
-                    new_path.append(edge)
+                    new_path.append(neighbor)
                     stack.push(new_path)
               
         return "So sorry, but a connecting path doesn't exist :("    
@@ -146,12 +145,12 @@ class Graph:
 ​
         This should be done using recursion.
         """
-        pass  # TODO
+    
         if visited is None:
             visited = set()
         if path is None:
             path = [] #because needs to be ordered
-        visited.add(starting_vertex) 
+        visited.add(starting_vertex)
         path = path + [starting_vertex]
         
         ## check if it's our target node, if so return
